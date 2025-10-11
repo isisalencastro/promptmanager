@@ -32,14 +32,14 @@ function updateEditableWrapperState(element, wrapper) {
 // Funções para abrir e fechar a sidebar
 function openSidebar() {
   // Simples: exibe a sidebar via inline style e esconde o botão de abrir
-  if (elements.sidebar) elements.sidebar.style.display = "block"
+  if (elements.sidebar) elements.sidebar.style.display = "flex"
   if (elements.btnOpen) elements.btnOpen.style.display = "none"
 }
 
 function closeSidebar() {
   // Simples: esconde a sidebar via inline style e mostra o botão de abrir
   if (elements.sidebar) elements.sidebar.style.display = "none"
-  if (elements.btnOpen) elements.btnOpen.style.display = "block"
+  if (elements.btnOpen) elements.btnOpen.style.display = "flex"
 }
 
 // Atualiza o estado de todos os elementos editáveis
