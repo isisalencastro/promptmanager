@@ -31,13 +31,15 @@ function updateEditableWrapperState(element, wrapper) {
 
 // Funções para abrir e fechar a sidebar
 function openSidebar() {
-  elements.sidebar.classList.add("open")
-  elements.sidebar.classList.remove("collapsed")
+  // Simples: exibe a sidebar via inline style e esconde o botão de abrir
+  if (elements.sidebar) elements.sidebar.style.display = "block"
+  if (elements.btnOpen) elements.btnOpen.style.display = "none"
 }
 
 function closeSidebar() {
-  elements.sidebar.classList.remove("open")
-  elements.sidebar.classList.add("collapsed")
+  // Simples: esconde a sidebar via inline style e mostra o botão de abrir
+  if (elements.sidebar) elements.sidebar.style.display = "none"
+  if (elements.btnOpen) elements.btnOpen.style.display = "block"
 }
 
 // Atualiza o estado de todos os elementos editáveis
@@ -213,11 +215,11 @@ function init() {
   attachAllEditableHandlers()
   updateAllEditableStates()
 
-  // Estado inicial: sidebar aberta (desktop) ou fechada (mobile)
-  elements.sidebar.classList.remove("open")
-  elements.sidebar.classList.remove("collapsed")
+  // Estado inicial: garantir que a sidebar esteja visível e o botão de abrir oculto
+  if (elements.sidebar) elements.sidebar.style.display = "flex"
+  if (elements.btnOpen) elements.btnOpen.style.display = "none"
 
-  // Eventos para abrir/fechar sidebar
+  // Eventos para abrir/fechar sidebar (implementação simples)
   if (elements.btnOpen) elements.btnOpen.addEventListener("click", openSidebar)
   if (elements.btnCollapse)
     elements.btnCollapse.addEventListener("click", closeSidebar)
