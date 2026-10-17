@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Prompt Manager: crie, organize, busque e reutilize seus prompts direto no navegador, com tags, favoritos, variáveis e exportação."
+    />
+    <meta name="theme-color" content="#0d0d0d" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,81 +20,153 @@
   </head>
   <body>
     <div class="app">
-      <button class="icon-button open-toggle" id="btn-open">
-        <img src="./assets/open.svg" alt="Abrir menu" class="icon" />
-      </button>
+      <div class="scrim" id="scrim" hidden></div>
 
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar" aria-label="Lista de prompts">
         <header class="sidebar-header">
-          <img src="./assets/logo.svg" alt="logo" class="logo" />
-
-          <button class="icon-button close-toggle" id="btn-collapse">
-            <img src="./assets/collapse.svg" alt="Fechar menu" class="icon" />
+          <img src="./assets/logo.svg" alt="Prompts Manager" class="logo" />
+          <button
+            class="icon-button close-toggle"
+            id="btn-collapse"
+            aria-label="Fechar menu"
+            title="Fechar menu"
+          >
+            <img src="./assets/collapse.svg" alt="" class="icon" />
           </button>
         </header>
 
         <div class="sidebar-content">
-          <div class="search-container">
-            <label class="search-input" for="search">
-              <img src="./assets/search.svg" alt="Buscar" class="search-icon" />
-              <input id="search" type="text" placeholder="Buscar prompts" />
-            </label>
+          <label class="search-input" for="search">
+            <img src="./assets/search.svg" alt="" class="search-icon" />
+            <input
+              id="search"
+              type="search"
+              placeholder="Buscar em título, texto e tags"
+              autocomplete="off"
+            />
+            <kbd class="kbd" aria-hidden="true">Ctrl K</kbd>
+          </label>
 
-            <button id="btn-new" class="btn-new">+ Novo prompt</button>
+          <button id="btn-new" class="btn-new">+ Novo prompt</button>
 
-            <div class="search-divider" aria-hidden="true"></div>
-            <ul class="prompt-list" id="prompt-list">
-              <li class="prompt-item" role="listitem">
-                <div class="prompt-item-content">
-                  <div class="prompt-item-text">
-                    <div class="prompt-item-title">Título do prompt</div>
-                  </div>
-                  <button class="btn-icon" aria-label="Remover prompt">
-                    <img
-                      src="./assets/remove.svg"
-                      alt="Remover"
-                      class="icon icon-trash"
-                    />
-                  </button>
-                </div>
-              </li>
-            </ul>
+          <div class="list-controls">
+            <span class="count" id="count" aria-live="polite"></span>
+            <select id="sort" class="select" aria-label="Ordenar prompts">
+              <option value="recent">Mais recentes</option>
+              <option value="az">A–Z</option>
+              <option value="fav">Favoritos primeiro</option>
+            </select>
           </div>
+
+          <div class="tag-filter" id="tag-filter" aria-label="Filtrar por tag"></div>
+
+          <div class="search-divider" aria-hidden="true"></div>
         </div>
+
+        <ul class="prompt-list" id="prompt-list"></ul>
+
+        <footer class="sidebar-footer">
+          <button class="btn-ghost" id="btn-export" title="Baixar todos os prompts em JSON">
+            <svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 20h16"/></svg>
+            Exportar
+          </button>
+          <button class="btn-ghost" id="btn-import" title="Importar prompts de um JSON">
+            <svg class="i" viewBox="0 0 24 24"><path d="M12 15V3m0 0L8 7m4-4 4 4M4 20h16"/></svg>
+            Importar
+          </button>
+          <input type="file" id="file-import" accept="application/json,.json" hidden />
+        </footer>
       </aside>
 
       <main class="main">
-        <header>
-          <button id="btn-copy" class="btn-outline">
-            <img src="./assets/copy.svg" alt="Copiar" class="icon" />
-            <span>Copiar</span>
-          </button>
-          <button id="btn-save" class="btn-primary">Salvar</button>
+        <button
+          class="icon-button open-toggle"
+          id="btn-open"
+          aria-label="Abrir menu"
+          title="Abrir menu"
+        >
+          <img src="./assets/open.svg" alt="" class="icon" />
+        </button>
+
+        <header class="toolbar">
+          <span class="status" id="status" aria-live="polite">Novo prompt</span>
+          <div class="toolbar-actions">
+            <button id="btn-fav" class="btn-outline btn-square" aria-pressed="false" title="Favoritar">
+              <svg class="i" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>
+            </button>
+            <button id="btn-dup" class="btn-outline btn-square" title="Duplicar prompt">
+              <svg class="i" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+            <button id="btn-copy" class="btn-outline">
+              <img src="./assets/copy.svg" alt="" class="icon" />
+              <span>Copiar</span>
+            </button>
+            <button id="btn-save" class="btn-primary">Salvar</button>
+          </div>
         </header>
-        <div
-          data-placeholder="Título do prompt"
-          class="editable-wrapper"
-          id="title-wrapper"
-        >
-          <h1
-            id="prompt-title"
-            class="prompt-title"
-            contenteditable="true"
-          ></h1>
-        </div>
-        <div
-          data-placeholder="Conteúdo do prompt..."
-          class="editable-wrapper"
-          id="content-wrapper"
-        >
+
+        <div class="editor">
           <div
+            data-placeholder="Título do prompt"
+            class="editable-wrapper"
+            id="title-wrapper"
+          >
+            <h1
+              id="prompt-title"
+              class="prompt-title"
+              contenteditable="plaintext-only"
+              role="textbox"
+              aria-label="Título do prompt"
+              spellcheck="false"
+            ></h1>
+          </div>
+
+          <div class="tag-editor" id="tag-editor">
+            <div class="tag-chips" id="tag-chips"></div>
+            <input
+              id="tag-input"
+              type="text"
+              placeholder="+ tag (Enter)"
+              maxlength="24"
+              aria-label="Adicionar tag"
+              autocomplete="off"
+            />
+          </div>
+
+          <textarea
             id="prompt-content"
             class="prompt-content"
-            contenteditable="true"
-          ></div>
+            placeholder="Conteúdo do prompt... Use {{variavel}} para criar campos que você preenche ao copiar."
+            aria-label="Conteúdo do prompt"
+            spellcheck="false"
+          ></textarea>
+
+          <footer class="editor-footer">
+            <div class="vars" id="vars" aria-label="Variáveis do prompt"></div>
+            <div class="metrics" id="metrics" aria-live="off"></div>
+          </footer>
         </div>
+
+        <p class="hint">
+          <kbd class="kbd">Ctrl S</kbd> salvar · <kbd class="kbd">Ctrl K</kbd> buscar ·
+          <kbd class="kbd">Alt N</kbd> novo
+        </p>
       </main>
     </div>
+
+    <dialog id="var-dialog" class="dialog">
+      <form method="dialog" id="var-form">
+        <h2>Preencher variáveis</h2>
+        <p class="dialog-sub">Os campos abaixo substituem <code>{{...}}</code> no texto copiado.</p>
+        <div id="var-fields" class="var-fields"></div>
+        <div class="dialog-actions">
+          <button type="button" class="btn-outline" id="var-cancel">Cancelar</button>
+          <button type="submit" class="btn-primary" value="ok">Copiar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
     <script src="./scripts.js"></script>
   </body>
