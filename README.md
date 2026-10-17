@@ -9,15 +9,18 @@ Os dados ficam salvos no `localStorage`, então você pode fechar e abrir o nave
 
 ## Funcionalidades
 
-- ✅ Criar novo prompt.
-- ✅ Editar título e conteúdo de um prompt existente.
-- ✅ Salvar prompts no navegador (`localStorage`).
-- ✅ Buscar prompts por título na barra lateral.
-- ✅ Selecionar um prompt da lista para visualizar/editar.
-- ✅ Remover prompt da lista.
-- ✅ Copiar conteúdo do prompt para a área de transferência.
-- ✅ Atalho de teclado para salvar (`Ctrl + Enter` ou `Cmd + Enter`).
-- ✅ Abrir/fechar menu lateral.
+- ✅ Criar, editar, duplicar e remover prompts (com **Desfazer** ao remover).
+- ✅ **Tags** por prompt e filtro por tag na barra lateral.
+- ✅ **Favoritos** (★) e ordenação: mais recentes, A–Z ou favoritos primeiro.
+- ✅ Busca por título, conteúdo e tags.
+- ✅ **Variáveis** no formato `{{nome}}`: ao copiar, um formulário pede os valores e o texto sai preenchido.
+- ✅ Copiar para a área de transferência com confirmação visual.
+- ✅ **Exportar e importar** todos os prompts em JSON (backup e troca de dispositivo).
+- ✅ Indicador de alterações não salvas, aviso ao sair sem salvar e contador de palavras, caracteres e tokens estimados.
+- ✅ Prévia do conteúdo, tags e data em cada item da lista.
+- ✅ Atalhos: `Ctrl/Cmd + S` ou `Ctrl/Cmd + Enter` salvar, `Ctrl/Cmd + K` buscar, `Alt + N` novo prompt.
+- ✅ Menu lateral recolhível (a escolha fica salva) e layout responsivo, com menu em gaveta no celular.
+- ✅ Prompts criados na versão anterior continuam funcionando (migração automática).
 
 ## Estrutura do projeto
 
@@ -60,7 +63,7 @@ http://localhost:8000
 1. Clique em **+ Novo prompt**.
 2. Digite o **título** e o **conteúdo**.
 3. Clique em **Salvar**.
-4. Use a barra de busca para encontrar prompts pelo título.
+4. Use a barra de busca, as tags e a ordenação para encontrar prompts.
 5. Clique em um item da lista para carregar e editar.
 6. Clique no ícone de lixeira para remover.
 7. Clique em **Copiar** para enviar o conteúdo para a área de transferência.
@@ -73,8 +76,8 @@ http://localhost:8000
 
 ## Persistência de dados
 
-- A aplicação utiliza `localStorage` com a chave:
-  - `prompts_storage`
+- A aplicação utiliza `localStorage` com as chaves:
+  - `prompts_storage` (prompts) e `prompts_ui` (ordenação e menu recolhido)
 - Os prompts são armazenados localmente no navegador em formato JSON.
 
 ## Tecnologias utilizadas
@@ -89,16 +92,13 @@ http://localhost:8000
 ## Limitações atuais
 
 - Não há autenticação/conta na nuvem.
-- Os dados não são sincronizados entre dispositivos.
-- A exportação/importação de prompts ainda não está implementada.
+- Os dados não são sincronizados entre dispositivos (use Exportar/Importar).
 
 ## Sugestões de evolução
 
-- Adicionar categorias/tags para prompts.
-- Implementar exportação/importação em JSON.
-- Incluir confirmação visual de “prompt salvo” e “conteúdo copiado”.
-- Criar modo escuro e melhorias de acessibilidade.
-- Disponibilizar versão com backend para sincronização.
+- Pastas ou coleções de prompts.
+- Histórico de versões de cada prompt.
+- Versão com backend para sincronização.
 
 ## Licença
 
